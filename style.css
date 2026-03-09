@@ -1,4 +1,3 @@
-
 body{
 font-family:"Malgun Gothic",sans-serif;
 background:#f4f7fb;
@@ -97,6 +96,8 @@ font-size:12px;
 text-align:center;
 box-shadow:0 6px 14px rgba(0,0,0,0.1);
 }
+
+/* 모바일 */
 
 @media (max-width:768px){
 
