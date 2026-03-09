@@ -1,38 +1,42 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>이번 호 추천 칼럼 사다리타기</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>삼천리 사보 사다리 게임</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div class="wrap">
-    <header class="header">
-      <h1>이번 호 추천 칼럼 사다리타기</h1>
-      <p>캐릭터를 하나 선택하면 랜덤으로 추천 칼럼에 연결됩니다.</p>
-    </header>
 
-    <section class="character-grid" id="characterGrid"></section>
+<div class="wrap">
 
-    <section class="ladder-area">
-      <div class="ladder-placeholder">
-        <span>사다리 영역</span>
-      </div>
-    </section>
+<h1>삼천리그룹 3월호 사보 추천 사다리 게임!</h1>
+<p class="guide">
+캐릭터를 선택하면 사다리를 타고 추천 칼럼 카드가 공개됩니다.
+</p>
 
-    <section class="result-card hidden" id="resultCard">
-      <p class="result-label">이번 호 추천 칼럼</p>
-      <h2 id="resultSection"></h2>
-      <p id="resultSubtext"></p>
-      <a id="resultLink" href="#" target="_blank" rel="noopener noreferrer">칼럼 보러 가기</a>
-    </section>
+<!-- 캐릭터 영역 -->
+<div class="character-row" id="characterRow"></div>
 
-    <div class="actions">
-      <button id="retryBtn" type="button">다시 하기</button>
-    </div>
-  </div>
+<!-- 사다리 영역 -->
+<div class="ladder-area">
 
-  <script src="script.js"></script>
+<svg id="ladderSvg"></svg>
+
+<img id="runner" class="runner">
+
+</div>
+
+<!-- 카드 영역 -->
+<div class="card-row" id="cardRow"></div>
+
+<!-- 효과음 -->
+<audio id="flipSound" src="sounds/ding.mp3"></audio>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>
