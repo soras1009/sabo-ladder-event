@@ -1,144 +1,119 @@
-* { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-  background: #f4f7fb;
-  color: #222;
+body{
+font-family:"Malgun Gothic",sans-serif;
+background:#f4f7fb;
+margin:0;
 }
 
-.wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 20px 60px;
+.wrap{
+max-width:1000px;
+margin:auto;
+padding:20px;
+text-align:center;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 28px;
+.character-row{
+display:grid;
+grid-template-columns:repeat(10,1fr);
+gap:10px;
+margin-bottom:6px;
 }
 
-.header h1 {
-  margin: 0 0 10px;
-  font-size: 34px;
-  line-height: 1.2;
+.character img{
+width:60px;
+cursor:pointer;
+animation:float 3s infinite ease-in-out;
 }
 
-.header p {
-  margin: 0;
-  font-size: 16px;
-  color: #555;
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+100%{transform:translateY(0)}
 }
 
-.character-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 24px;
+.ladder-area{
+height:160px;
+position:relative;
+margin-bottom:8px;
 }
 
-.character-btn {
-  border: 0;
-  background: #fff;
-  border-radius: 18px;
-  padding: 12px;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-  transition: transform .18s ease, box-shadow .18s ease;
+#ladderSvg{
+width:100%;
+height:100%;
 }
 
-.character-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.10);
+.runner{
+position:absolute;
+width:36px;
+transform:translate(-50%,-50%);
+transition:all 1s linear;
+pointer-events:none;
 }
 
-.character-btn.is-active {
-  outline: 3px solid #2f80ed;
+.card-row{
+display:grid;
+grid-template-columns:repeat(10,1fr);
+gap:10px;
 }
 
-.character-btn img {
-  width: 100%;
-  aspect-ratio: 1 / 1.2;
-  object-fit: contain;
-  display: block;
+.card{
+perspective:1000px;
+cursor:pointer;
 }
 
-.ladder-area { margin-bottom: 24px; }
-
-.ladder-placeholder {
-  min-height: 220px;
-  border-radius: 20px;
-  background:
-    linear-gradient(90deg, transparent 9%, #d7e2f4 9%, #d7e2f4 11%, transparent 11%) 0 0/20% 100%,
-    linear-gradient(#d7e2f4 0 0) 20% 20%/60% 2px no-repeat,
-    linear-gradient(#d7e2f4 0 0) 10% 42%/52% 2px no-repeat,
-    linear-gradient(#d7e2f4 0 0) 38% 64%/52% 2px no-repeat,
-    linear-gradient(#d7e2f4 0 0) 26% 84%/46% 2px no-repeat,
-    #fff;
-  border: 1px solid #e3ebf7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #7c8aa6;
-  font-size: 15px;
+.card-inner{
+position:relative;
+height:90px;
+transition:transform .6s;
+transform-style:preserve-3d;
 }
 
-.result-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-  margin-bottom: 16px;
+.card.flip .card-inner{
+transform:rotateY(180deg);
 }
 
-.result-label {
-  margin: 0 0 10px;
-  font-size: 14px;
-  color: #6b778d;
+.card-front,
+.card-back{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:10px;
+display:flex;
+align-items:center;
+justify-content:center;
+backface-visibility:hidden;
 }
 
-.result-card h2 {
-  margin: 0 0 12px;
-  font-size: 24px;
-  line-height: 1.35;
+.card-front{
+background:#e6edf9;
+font-weight:bold;
 }
 
-.result-card p {
-  margin: 0 0 18px;
-  line-height: 1.6;
+.card-back{
+background:white;
+transform:rotateY(180deg);
+padding:6px;
+font-size:12px;
+text-align:center;
+box-shadow:0 6px 14px rgba(0,0,0,0.1);
 }
 
-.result-card a {
-  display: inline-block;
-  padding: 12px 18px;
-  border-radius: 12px;
-  background: #1f2937;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 700;
+@media (max-width:768px){
+
+.character-row{
+grid-template-columns:repeat(5,1fr);
 }
 
-.actions { text-align: center; }
-
-.actions button {
-  border: 0;
-  border-radius: 12px;
-  background: #d9e6fb;
-  color: #1b4ea3;
-  padding: 12px 18px;
-  font-weight: 700;
-  cursor: pointer;
+.card-row{
+grid-template-columns:repeat(5,1fr);
 }
 
-.hidden { display: none; }
-
-@media (max-width: 900px) {
-  .character-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.character img{
+width:48px;
 }
 
-@media (max-width: 640px) {
-  .wrap { padding: 24px 16px 44px; }
-  .header h1 { font-size: 26px; }
-  .character-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .result-card h2 { font-size: 20px; }
+.card-inner{
+height:80px;
+}
+
 }
