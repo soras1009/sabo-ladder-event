@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>이번 호 추천 칼럼 사다리타기</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <h1>이번 호 추천 칼럼 사다리타기</h1>
+      <p>캐릭터를 하나 선택하면 랜덤으로 추천 칼럼에 연결됩니다.</p>
+    </header>
+
+    <section class="character-grid" id="characterGrid"></section>
+
+    <section class="ladder-area">
+      <div class="ladder-placeholder">
+        <span>사다리 영역</span>
+      </div>
+    </section>
+
+    <section class="result-card hidden" id="resultCard">
+      <p class="result-label">이번 호 추천 칼럼</p>
+      <h2 id="resultSection"></h2>
+      <p id="resultSubtext"></p>
+      <a id="resultLink" href="#" target="_blank" rel="noopener noreferrer">칼럼 보러 가기</a>
+    </section>
+
+    <div class="actions">
+      <button id="retryBtn" type="button">다시 하기</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
