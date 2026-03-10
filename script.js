@@ -85,7 +85,7 @@ const LOGGING_URL = "https://script.google.com/macros/s/AKfycbx8S_ngT6uAm44bXBLi
  * 당첨 확률
  * 0.08 = 8%
  */
-const WINNING_RATE = 1;
+const WINNING_RATE = 0.006;
 
 const characterRow = document.getElementById("characterRow");
 const cardRow = document.getElementById("cardRow");
