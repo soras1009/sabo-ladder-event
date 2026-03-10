@@ -137,16 +137,13 @@ function createCards() {
           <div class="card-back-inner">
             <p class="card-section">${column.section}</p>
             <p class="card-sub">${column.sub}</p>
+            <a class="card-link" href="${column.link}?from=ladder&column=${column.id}" target="_blank" rel="noopener noreferrer">
+              칼럼 보러 가기
+            </a>
           </div>
         </div>
       </div>
     `;
-
-    card.addEventListener("click", () => {
-      if (!card.classList.contains("flip")) return;
-      const url = `${column.link}?from=ladder&column=${column.id}`;
-      window.open(url, "_blank", "noopener,noreferrer");
-    });
 
     cardRow.appendChild(card);
     cards.push(card);
@@ -177,7 +174,7 @@ function buildLadder() {
     ladderSvg.appendChild(line);
   });
 
-  // 가로줄
+  // 가로줄 랜덤 생성
   const rungYs = [46, 76, 106, 136, 166, 196, 226, 256, 286];
   const rungs = [];
 
@@ -186,7 +183,6 @@ function buildLadder() {
     const candidates = shuffle([...Array(cols - 1).keys()]);
 
     candidates.forEach((leftCol) => {
-      // 인접 가로줄 방지
       if (rowUsed.has(leftCol) || rowUsed.has(leftCol - 1) || rowUsed.has(leftCol + 1)) return;
 
       if (Math.random() < 0.55) {
@@ -211,7 +207,7 @@ function buildLadder() {
       }
     });
 
-    // 각 높이에 최소 1개 보장
+    // 각 줄에 최소 1개는 보장
     if (!rungs.some((r) => r.y === y)) {
       const forced = Math.floor(Math.random() * (cols - 1));
       const rung = {
