@@ -78,8 +78,6 @@ const icons = ["🔥", "🚗", "📰", "🌿", "🏆", "📚", "🎓", "🏠", "
 
 /**
  * 여기에 Google Apps Script 웹앱 URL 넣기
- * 예:
- * const LOGGING_URL = "https://script.google.com/macros/s/AKfycbxxxxxx/exec";
  */
 const LOGGING_URL = "https://script.google.com/macros/s/AKfycbx8S_ngT6uAm44bXBLinyMwoVP5byi3ZKcMZBbwHx3MLr220SuWcPYXGLbmJVL_YvM-/exec";
 
@@ -125,9 +123,6 @@ function logColumnClick(column, characterIndex) {
   fetch(LOGGING_URL, {
     method: "POST",
     mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json"
-    },
     body: JSON.stringify(payload)
   }).catch(() => {
     // 로그 실패해도 페이지 동작에는 영향 없게
@@ -201,7 +196,6 @@ function buildLadder() {
   const colStep = width / cols;
   const xPositions = Array.from({ length: cols }, (_, i) => colStep * i + colStep / 2);
 
-  // 세로줄
   xPositions.forEach((x) => {
     const line = createSVG("line");
     line.setAttribute("x1", x);
@@ -214,7 +208,6 @@ function buildLadder() {
     ladderSvg.appendChild(line);
   });
 
-  // 가로줄 랜덤 생성
   const rungYs = [46, 76, 106, 136, 166, 196, 226, 256, 286];
   const rungs = [];
 
@@ -247,7 +240,6 @@ function buildLadder() {
       }
     });
 
-    // 각 줄에 최소 1개 보장
     if (!rungs.some((r) => r.y === y)) {
       const forced = Math.floor(Math.random() * (cols - 1));
       const rung = {
