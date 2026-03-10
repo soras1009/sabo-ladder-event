@@ -55,12 +55,13 @@ body {
   align-items: center;
   min-height: 92px;
   cursor: pointer;
-  border-radius: 16px;
   transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+  box-shadow: none;
+  outline: none;
 }
 
 .character:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1.03);
 }
 
 .character.is-active {
@@ -131,7 +132,6 @@ body {
 
 .card {
   perspective: 1200px;
-  cursor: pointer;
   transition: transform 0.25s ease;
 }
 
@@ -142,7 +142,7 @@ body {
 .card-inner {
   position: relative;
   width: 100%;
-  height: 118px;
+  height: 126px;
   transform-style: preserve-3d;
   transition: transform 0.7s cubic-bezier(.2, .8, .2, 1.2);
 }
@@ -182,7 +182,7 @@ body {
 
 .card-back {
   transform: rotateY(180deg);
-  padding: 12px 10px;
+  padding: 10px 8px;
   text-align: center;
   background: #ffffff;
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -207,6 +207,23 @@ body {
   line-height: 1.45;
   color: #475569;
   word-break: keep-all;
+}
+
+.card-link {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.card-link:hover {
+  background: #1d4ed8;
 }
 
 .card-1 .card-front { background: linear-gradient(180deg, #ffd7d7 0%, #ffc4c4 100%); }
@@ -274,7 +291,7 @@ body {
   }
 
   .card-inner {
-    height: 106px;
+    height: 116px;
   }
 
   .card-front .card-icon {
@@ -291,5 +308,10 @@ body {
 
   .card-sub {
     font-size: 11px;
+  }
+
+  .card-link {
+    font-size: 10px;
+    padding: 6px 10px;
   }
 }
