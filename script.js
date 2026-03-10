@@ -15,7 +15,7 @@ const columns = [
   {
     id: "col01_hot_issue",
     section: "핫이슈",
-    sub: "삼천리그룹 70년사 발간",
+    sub: "삼천리그룹 70년사 발",
     link: "http://sabo.samchully.co.kr/202603/special06.php"
   },
   {
@@ -77,14 +77,26 @@ const columns = [
 const icons = ["🔥", "🚗", "📰", "🌿", "🏆", "📚", "🎓", "🏠", "🌍", "📢"];
 
 /**
- * 여기에 Google Apps Script 웹앱 URL 넣기
+ * Google Apps Script 웹앱 URL
  */
 const LOGGING_URL = "https://script.google.com/macros/s/AKfycbx8S_ngT6uAm44bXBLinyMwoVP5byi3ZKcMZBbwHx3MLr220SuWcPYXGLbmJVL_YvM-/exec";
+
+/**
+ * 당첨 확률
+ * 0.08 = 8%
+ */
+const WINNING_RATE = 0.08;
 
 const characterRow = document.getElementById("characterRow");
 const cardRow = document.getElementById("cardRow");
 const ladderSvg = document.getElementById("ladderSvg");
 const runner = document.getElementById("runner");
+
+const winnerModal = document.getElementById("winnerModal");
+const winnerCloseBtn = document.getElementById("winnerCloseBtn");
+const winnerColumnLink = document.getElementById("winnerColumnLink");
+const winnerColumnText = document.getElementById("winnerColumnText");
+const winnerTimeText = document.getElementById("winnerTimeText");
 
 let cards = [];
 let characterEls = [];
@@ -105,7 +117,32 @@ function shuffle(array) {
   return copied;
 }
 
-function logColumnClick(column, characterIndex) {
+function formatNow() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mi = String(now.getMinutes()).padStart(2, "0");
+  return `${yyyy}.${mm}.${dd} ${hh}:${mi}`;
+}
+
+function isWinner() {
+  return Math.random() < WINNING_RATE;
+}
+
+function openWinnerModal(column) {
+  winnerColumnText.innerHTML = `<strong>추천 칼럼:</strong> ${column.section} / ${column.sub}`;
+  winnerTimeText.innerHTML = `<strong>참여 시간:</strong> ${formatNow()}`;
+  winnerColumnLink.href = `${column.link}?from=ladder_winner&column=${column.id}`;
+  winnerModal.classList.remove("hidden");
+}
+
+function closeWinnerModal() {
+  winnerModal.classList.add("hidden");
+}
+
+function logColumnClick(column, characterIndex, winner = false) {
   if (!LOGGING_URL || LOGGING_URL.includes("여기에_구글앱스크립트_URL_넣기")) return;
 
   const payload = {
@@ -116,6 +153,7 @@ function logColumnClick(column, characterIndex) {
     link: column.link,
     characterIndex: characterIndex !== null ? characterIndex + 1 : "",
     characterId: characterIndex !== null ? `char${String(characterIndex + 1).padStart(2, "0")}` : "",
+    isWinner: winner ? "Y" : "N",
     userAgent: navigator.userAgent,
     pageUrl: window.location.href
   };
@@ -177,7 +215,7 @@ function createCards() {
 
     const linkEl = card.querySelector(".card-link");
     linkEl.addEventListener("click", () => {
-      logColumnClick(column, lastSelectedCharacterIndex);
+      logColumnClick(column, lastSelectedCharacterIndex, false);
     });
 
     cardRow.appendChild(card);
@@ -189,7 +227,6 @@ function buildLadder() {
   ladderSvg.innerHTML = "";
 
   const width = 1000;
-  const height = 320;
   const cols = 10;
   const topY = 16;
   const bottomY = 300;
@@ -263,7 +300,6 @@ function buildLadder() {
 
   return {
     width,
-    height,
     cols,
     topY,
     bottomY,
@@ -353,7 +389,7 @@ function animateRunner(src, points) {
   runner.classList.remove("hidden");
 
   const scaleX = ladderSvg.clientWidth / ladderState.width;
-  const scaleY = ladderSvg.clientHeight / ladderState.height;
+  const scaleY = ladderSvg.clientHeight / 320;
 
   const mappedPoints = points.map((p) => ({
     x: p.x * scaleX,
@@ -395,16 +431,24 @@ function startGame(charIndex) {
     el.classList.add("is-disabled");
   });
 
+  closeWinnerModal();
+
   const path = computePath(charIndex);
   drawHighlightedPath(path.segments);
   const totalDuration = animateRunner(characters[charIndex], path.points);
 
   setTimeout(() => {
+    const targetColumn = columns[path.endCol];
     cards[path.endCol].classList.add("flip");
     cards[path.endCol].scrollIntoView({
       behavior: "smooth",
       block: "center"
     });
+
+    if (isWinner()) {
+      logColumnClick(targetColumn, lastSelectedCharacterIndex, true);
+      openWinnerModal(targetColumn);
+    }
 
     characterEls.forEach((el) => el.classList.remove("is-disabled"));
     isPlaying = false;
@@ -415,6 +459,18 @@ function init() {
   createCharacters();
   createCards();
   resetBoard();
+
+  if (winnerCloseBtn) {
+    winnerCloseBtn.addEventListener("click", closeWinnerModal);
+  }
+
+  if (winnerModal) {
+    winnerModal.addEventListener("click", (e) => {
+      if (e.target.classList.contains("winner-modal") || e.target.classList.contains("winner-modal__dim")) {
+        closeWinnerModal();
+      }
+    });
+  }
 
   window.addEventListener("resize", () => {
     if (isPlaying) return;
