@@ -1,42 +1,30 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>삼천리 사보 사다리 게임</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>삼천리그룹 3월호 사보 추천 사다리 게임</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
+  <div class="wrap">
+    <header class="header">
+      <h1>삼천리그룹 3월호 사보 추천 사다리 게임!</h1>
+      <p class="guide">
+        캐릭터를 선택하면 사다리를 타고 추천 칼럼 카드가 공개됩니다.
+      </p>
+    </header>
 
-<div class="wrap">
+    <section class="character-row" id="characterRow"></section>
 
-<h1>삼천리그룹 3월호 사보 추천 사다리 게임!</h1>
-<p class="guide">
-캐릭터를 선택하면 사다리를 타고 추천 칼럼 카드가 공개됩니다.
-</p>
+    <section class="ladder-area">
+      <svg id="ladderSvg" viewBox="0 0 1000 320" preserveAspectRatio="none"></svg>
+      <img id="runner" class="runner hidden" alt="선택 캐릭터" />
+    </section>
 
-<!-- 캐릭터 영역 -->
-<div class="character-row" id="characterRow"></div>
+    <section class="card-row" id="cardRow"></section>
+  </div>
 
-<!-- 사다리 영역 -->
-<div class="ladder-area">
-
-<svg id="ladderSvg"></svg>
-
-<img id="runner" class="runner">
-
-</div>
-
-<!-- 카드 영역 -->
-<div class="card-row" id="cardRow"></div>
-
-<!-- 효과음 -->
-<audio id="flipSound" src="sounds/ding.mp3"></audio>
-
-</div>
-
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
