@@ -81,7 +81,7 @@ const icons = ["🔥", "🚗", "📰", "🌿", "🏆", "📚", "🎓", "🏠", "
  * 예:
  * const LOGGING_URL = "https://script.google.com/macros/s/AKfycbxxxxxx/exec";
  */
-const LOGGING_URL = "https://script.google.com/macros/s/AKfycbxWvspJMPxHmCxv9WjxM45XoMkEqOTdnGEzYrFlTVOcIgecmeealTtGuPOg2vzcvnQa/exec";
+const LOGGING_URL = "https://script.google.com/macros/s/AKfycbx8S_ngT6uAm44bXBLinyMwoVP5byi3ZKcMZBbwHx3MLr220SuWcPYXGLbmJVL_YvM-/exec";
 
 const characterRow = document.getElementById("characterRow");
 const cardRow = document.getElementById("cardRow");
