@@ -15,19 +15,19 @@ const columns = [
   {
     id: "col01_hot_issue",
     section: "핫이슈",
-    sub: "삼천리그룹 70년의 기록, 우리의 미래를 비추다",
+    sub: "삼천리그룹 70년사 발",
     link: "http://sabo.samchully.co.kr/202603/special06.php"
   },
   {
     id: "col02_focus_ev",
-    section: "포커스",
-    sub: "삼천리EV가 제안하는 실속형 전기차 등장",
+    section: "포커스1",
+    sub: "삼천리EV가 제안하는 실속형 전기차(DOLPHIN) ",
     link: "http://sabo.samchully.co.kr/202603/special03.php"
   },
   {
     id: "col03_focus_reporters",
-    section: "포커스",
-    sub: "사내기자단이 펼쳐갈 소통의 장",
+    section: "포커스2",
+    sub: "그룹 사내기자단이 펼쳐갈 소통의 장",
     link: "http://sabo.samchully.co.kr/202603/special02.php"
   },
   {
@@ -39,7 +39,7 @@ const columns = [
   {
     id: "col05_dream_team",
     section: "우리는 드림팀!",
-    sub: "We Higher! 2026 더 큰 도약을 위하여!",
+    sub: "삼천리 모터스 천안전시장",
     link: "http://sabo.samchully.co.kr/202603/people01.php"
   },
   {
@@ -51,7 +51,7 @@ const columns = [
   {
     id: "col07_happy_together",
     section: "해피 투게더",
-    sub: "BEYOND AI 시대 아름다운 리더를 꿈꾸다",
+    sub: "천만문화재단 장학증서 수여식",
     link: "http://sabo.samchully.co.kr/202603/people03.php"
   },
   {
@@ -63,13 +63,13 @@ const columns = [
   {
     id: "col09_trip",
     section: "삼천리 방방곡곡",
-    sub: "속도와 고요함이라는 상반된 세계의 완벽한 균형",
+    sub: "M235 그란 쿠페와 시흥 물왕호수 여행",
     link: "http://sabo.samchully.co.kr/202603/life01.php"
   },
   {
     id: "col10_group_news",
     section: "삼천리그룹 소식",
-    sub: "70주년 사사 발간 등 그룹 주요 소식",
+    sub: "그룹 주요 소식",
     link: "http://sabo.samchully.co.kr/202603/life05.php"
   }
 ];
