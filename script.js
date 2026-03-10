@@ -86,6 +86,10 @@ let characterEls = [];
 let ladderState = null;
 let isPlaying = false;
 
+function createSVG(type) {
+  return document.createElementNS("http://www.w3.org/2000/svg", type);
+}
+
 function shuffle(array) {
   const copied = [...array];
   for (let i = copied.length - 1; i > 0; i--) {
@@ -100,19 +104,18 @@ function createCharacters() {
   characterEls = [];
 
   characters.forEach((src, index) => {
-    const item = document.createElement("button");
-    item.type = "button";
-    item.className = "character";
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "character";
+    btn.innerHTML = `<img src="${src}" alt="캐릭터 ${index + 1}" />`;
 
-    item.innerHTML = `<img src="${src}" alt="캐릭터 ${index + 1}" />`;
-
-    item.addEventListener("click", () => {
+    btn.addEventListener("click", () => {
       if (isPlaying) return;
       startGame(index);
     });
 
-    characterRow.appendChild(item);
-    characterEls.push(item);
+    characterRow.appendChild(btn);
+    characterEls.push(btn);
   });
 }
 
@@ -150,187 +153,198 @@ function createCards() {
   });
 }
 
-function drawLine(x1, y1, x2, y2, stroke, width, className = "") {
-  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-  line.setAttribute("x1", x1);
-  line.setAttribute("y1", y1);
-  line.setAttribute("x2", x2);
-  line.setAttribute("y2", y2);
-  line.setAttribute("stroke", stroke);
-  line.setAttribute("stroke-width", width);
-  line.setAttribute("stroke-linecap", "round");
-  if (className) line.setAttribute("class", className);
-  ladderSvg.appendChild(line);
-  return line;
-}
-
 function buildLadder() {
   ladderSvg.innerHTML = "";
 
   const width = 1000;
   const height = 320;
   const cols = 10;
-  const topY = 10;
-  const bottomY = 310;
+  const topY = 16;
+  const bottomY = 300;
   const colStep = width / cols;
   const xPositions = Array.from({ length: cols }, (_, i) => colStep * i + colStep / 2);
 
-  const rungYs = [48, 82, 116, 150, 184, 218, 252, 286];
-  const rungs = [];
-
+  // 세로줄
   xPositions.forEach((x) => {
-    drawLine(x, topY, x, bottomY, "#bfd0ea", 3);
+    const line = createSVG("line");
+    line.setAttribute("x1", x);
+    line.setAttribute("y1", topY);
+    line.setAttribute("x2", x);
+    line.setAttribute("y2", bottomY);
+    line.setAttribute("stroke", "#bfd0ea");
+    line.setAttribute("stroke-width", "3");
+    line.setAttribute("stroke-linecap", "round");
+    ladderSvg.appendChild(line);
   });
 
-  rungYs.forEach((y, rowIndex) => {
-    const possible = shuffle([...Array(cols - 1).keys()]);
-    const used = new Set();
-    const rowRungs = [];
+  // 가로줄
+  const rungYs = [46, 76, 106, 136, 166, 196, 226, 256, 286];
+  const rungs = [];
 
-    possible.forEach((col) => {
-      if (used.has(col) || used.has(col - 1) || used.has(col + 1)) return;
-      if (Math.random() < 0.58) {
-        const x1 = xPositions[col];
-        const x2 = xPositions[col + 1];
-        const line = drawLine(x1, y, x2, y, "#9fb9e5", 4);
-        rowRungs.push({ left: col, right: col + 1, y, line });
-        used.add(col);
+  rungYs.forEach((y) => {
+    const rowUsed = new Set();
+    const candidates = shuffle([...Array(cols - 1).keys()]);
+
+    candidates.forEach((leftCol) => {
+      // 인접 가로줄 방지
+      if (rowUsed.has(leftCol) || rowUsed.has(leftCol - 1) || rowUsed.has(leftCol + 1)) return;
+
+      if (Math.random() < 0.55) {
+        rowUsed.add(leftCol);
+
+        const rung = {
+          left: leftCol,
+          right: leftCol + 1,
+          y
+        };
+        rungs.push(rung);
+
+        const line = createSVG("line");
+        line.setAttribute("x1", xPositions[rung.left]);
+        line.setAttribute("y1", y);
+        line.setAttribute("x2", xPositions[rung.right]);
+        line.setAttribute("y2", y);
+        line.setAttribute("stroke", "#9fb9e5");
+        line.setAttribute("stroke-width", "4");
+        line.setAttribute("stroke-linecap", "round");
+        ladderSvg.appendChild(line);
       }
     });
 
-    // 너무 빈약하면 최소 1개는 보장
-    if (rowRungs.length === 0) {
+    // 각 높이에 최소 1개 보장
+    if (!rungs.some((r) => r.y === y)) {
       const forced = Math.floor(Math.random() * (cols - 1));
-      const x1 = xPositions[forced];
-      const x2 = xPositions[forced + 1];
-      const line = drawLine(x1, y, x2, y, "#9fb9e5", 4);
-      rowRungs.push({ left: forced, right: forced + 1, y, line });
-    }
+      const rung = {
+        left: forced,
+        right: forced + 1,
+        y
+      };
+      rungs.push(rung);
 
-    rungs.push(...rowRungs);
+      const line = createSVG("line");
+      line.setAttribute("x1", xPositions[rung.left]);
+      line.setAttribute("y1", y);
+      line.setAttribute("x2", xPositions[rung.right]);
+      line.setAttribute("y2", y);
+      line.setAttribute("stroke", "#9fb9e5");
+      line.setAttribute("stroke-width", "4");
+      line.setAttribute("stroke-linecap", "round");
+      ladderSvg.appendChild(line);
+    }
   });
 
   return {
     width,
     height,
     cols,
-    xPositions,
     topY,
     bottomY,
-    rungs
+    xPositions,
+    rungs: rungs.sort((a, b) => a.y - b.y)
   };
 }
 
 function computePath(startCol) {
-  const state = ladderState;
-  const sortedRungs = [...state.rungs].sort((a, b) => a.y - b.y);
-
-  const points = [];
-  const highlightSegments = [];
+  const { xPositions, topY, bottomY, rungs } = ladderState;
 
   let currentCol = startCol;
-  let currentX = state.xPositions[currentCol];
-  let currentY = state.topY;
+  let currentX = xPositions[currentCol];
+  let currentY = topY;
 
-  points.push({ x: currentX, y: currentY });
+  const points = [{ x: currentX, y: currentY }];
+  const segments = [];
 
-  for (const rung of sortedRungs) {
-    const touches =
-      (rung.left === currentCol || rung.right === currentCol);
+  rungs.forEach((rung) => {
+    if (rung.left !== currentCol && rung.right !== currentCol) return;
 
-    if (!touches) continue;
-
-    // 세로로 내려오는 구간
     if (currentY !== rung.y) {
-      points.push({ x: currentX, y: rung.y });
-      highlightSegments.push({
-        type: "vertical",
+      segments.push({
         x1: currentX,
         y1: currentY,
         x2: currentX,
         y2: rung.y
       });
+      points.push({ x: currentX, y: rung.y });
     }
 
-    // 가로 이동 구간
     const nextCol = rung.left === currentCol ? rung.right : rung.left;
-    const nextX = state.xPositions[nextCol];
+    const nextX = xPositions[nextCol];
 
-    points.push({ x: nextX, y: rung.y });
-    highlightSegments.push({
-      type: "horizontal",
+    segments.push({
       x1: currentX,
       y1: rung.y,
       x2: nextX,
       y2: rung.y
     });
+    points.push({ x: nextX, y: rung.y });
 
     currentCol = nextCol;
     currentX = nextX;
     currentY = rung.y;
-  }
+  });
 
-  if (currentY !== state.bottomY) {
-    points.push({ x: currentX, y: state.bottomY });
-    highlightSegments.push({
-      type: "vertical",
+  if (currentY !== bottomY) {
+    segments.push({
       x1: currentX,
       y1: currentY,
       x2: currentX,
-      y2: state.bottomY
+      y2: bottomY
     });
+    points.push({ x: currentX, y: bottomY });
   }
 
   return {
     endCol: currentCol,
     points,
-    highlightSegments
+    segments
   };
 }
 
 function drawHighlightedPath(segments) {
-  const lines = [];
   segments.forEach((seg, index) => {
-    const line = drawLine(seg.x1, seg.y1, seg.x1, seg.y1, "#1d4ed8", 6, "path-highlight");
-    lines.push({ line, seg, delay: index * 180 });
-  });
+    const line = createSVG("line");
+    line.setAttribute("x1", seg.x1);
+    line.setAttribute("y1", seg.y1);
+    line.setAttribute("x2", seg.x1);
+    line.setAttribute("y2", seg.y1);
+    line.setAttribute("stroke", "#2563eb");
+    line.setAttribute("stroke-width", "6");
+    line.setAttribute("stroke-linecap", "round");
+    line.style.transition = "all 0.18s linear";
+    ladderSvg.appendChild(line);
 
-  lines.forEach(({ line, seg, delay }) => {
     setTimeout(() => {
       line.setAttribute("x2", seg.x2);
       line.setAttribute("y2", seg.y2);
-      line.style.transition = "all 0.16s linear";
-    }, delay);
+    }, index * 180);
   });
-
-  return lines;
 }
 
-function animateRunner(imgSrc, points) {
-  runner.src = imgSrc;
+function animateRunner(src, points) {
+  runner.src = src;
   runner.classList.remove("hidden");
 
   const scaleX = ladderSvg.clientWidth / ladderState.width;
   const scaleY = ladderSvg.clientHeight / ladderState.height;
 
-  const mapped = points.map((p) => ({
+  const mappedPoints = points.map((p) => ({
     x: p.x * scaleX,
     y: p.y * scaleY
   }));
 
-  if (mapped.length === 0) return 0;
+  if (!mappedPoints.length) return 0;
 
-  runner.style.left = `${mapped[0].x}px`;
-  runner.style.top = `${mapped[0].y}px`;
+  runner.style.left = `${mappedPoints[0].x}px`;
+  runner.style.top = `${mappedPoints[0].y}px`;
 
-  mapped.forEach((point, index) => {
+  mappedPoints.forEach((point, index) => {
     setTimeout(() => {
       runner.style.left = `${point.x}px`;
       runner.style.top = `${point.y}px`;
     }, index * 180);
   });
 
-  return (mapped.length - 1) * 180 + 220;
+  return (mappedPoints.length - 1) * 180 + 220;
 }
 
 function resetBoard() {
@@ -351,18 +365,20 @@ function startGame(charIndex) {
     el.classList.add("is-disabled");
   });
 
-  const pathResult = computePath(charIndex);
-  drawHighlightedPath(pathResult.highlightSegments);
-  const duration = animateRunner(characters[charIndex], pathResult.points);
+  const path = computePath(charIndex);
+  drawHighlightedPath(path.segments);
+  const totalDuration = animateRunner(characters[charIndex], path.points);
 
   setTimeout(() => {
-    const targetCard = cards[pathResult.endCol];
-    targetCard.classList.add("flip");
-    targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+    cards[path.endCol].classList.add("flip");
+    cards[path.endCol].scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
 
     characterEls.forEach((el) => el.classList.remove("is-disabled"));
     isPlaying = false;
-  }, duration);
+  }, totalDuration);
 }
 
 function init() {
