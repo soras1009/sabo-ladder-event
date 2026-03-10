@@ -23,6 +23,35 @@
     </section>
 
     <section class="card-row" id="cardRow"></section>
+
+    <div class="winner-modal hidden" id="winnerModal">
+      <div class="winner-modal__dim"></div>
+      <div class="winner-modal__dialog">
+        <div class="winner-badge">🎉</div>
+        <h2>축하합니다! 커피 쿠폰에 당첨되셨습니다.</h2>
+        <p>
+          당첨 화면을 캡처해 아래 담당자 이메일로 보내주세요.<br>
+          확인 후 커피 쿠폰을 발송해드립니다.
+        </p>
+
+        <div class="winner-info">
+          <p><strong>담당자:</strong> 삼천리 PR팀 송지원 대리</p>
+          <p><strong>이메일:</strong> jwsong@samchully.co.kr</p>
+          <p><strong>메일 제목:</strong> [사보 사다리 이벤트 당첨] 이름 / 부서</p>
+          <p id="winnerColumnText"><strong>추천 칼럼:</strong> -</p>
+          <p id="winnerTimeText"><strong>참여 시간:</strong> -</p>
+        </div>
+
+        <p class="winner-note">※ 경품 지급은 내부 확인 후 최종 확정됩니다.</p>
+
+        <div class="winner-actions">
+          <button type="button" class="winner-btn winner-btn--secondary" id="winnerCloseBtn">확인</button>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="winner-btn winner-btn--primary" id="winnerColumnLink">
+            칼럼 보러 가기
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
