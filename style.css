@@ -80,7 +80,10 @@ body {
 
 .character:nth-child(1) img { animation-duration: 3.2s; }
 .character:nth-child(2) img { animation-duration: 2.9s; }
-.character:nth-child(3) img { animation-duration: 3.4s; }
+.character:nth-child(3) img {
+  width: 86px;
+  animation-duration: 3.4s;
+}
 .character:nth-child(4) img { animation-duration: 3.0s; }
 .character:nth-child(5) img { animation-duration: 3.3s; }
 .character:nth-child(6) img { animation-duration: 2.8s; }
@@ -263,6 +266,10 @@ body {
   .character img {
     width: 64px;
   }
+
+  .character:nth-child(3) img {
+    width: 76px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -284,6 +291,10 @@ body {
 
   .character img {
     width: 56px;
+  }
+
+  .character:nth-child(3) img {
+    width: 68px;
   }
 
   .runner {
