@@ -76,6 +76,13 @@ const columns = [
 
 const icons = ["🔥", "🚗", "📰", "🌿", "🏆", "📚", "🎓", "🏠", "🌍", "📢"];
 
+/**
+ * 여기에 Google Apps Script 웹앱 URL 넣기
+ * 예:
+ * const LOGGING_URL = "https://script.google.com/macros/s/AKfycbxxxxxx/exec";
+ */
+const LOGGING_URL = "https://script.google.com/macros/s/AKfycbxWvspJMPxHmCxv9WjxM45XoMkEqOTdnGEzYrFlTVOcIgecmeealTtGuPOg2vzcvnQa/exec";
+
 const characterRow = document.getElementById("characterRow");
 const cardRow = document.getElementById("cardRow");
 const ladderSvg = document.getElementById("ladderSvg");
@@ -85,6 +92,7 @@ let cards = [];
 let characterEls = [];
 let ladderState = null;
 let isPlaying = false;
+let lastSelectedCharacterIndex = null;
 
 function createSVG(type) {
   return document.createElementNS("http://www.w3.org/2000/svg", type);
@@ -97,6 +105,33 @@ function shuffle(array) {
     [copied[i], copied[j]] = [copied[j], copied[i]];
   }
   return copied;
+}
+
+function logColumnClick(column, characterIndex) {
+  if (!LOGGING_URL || LOGGING_URL.includes("여기에_구글앱스크립트_URL_넣기")) return;
+
+  const payload = {
+    timestamp: new Date().toISOString(),
+    columnId: column.id,
+    section: column.section,
+    subtext: column.sub,
+    link: column.link,
+    characterIndex: characterIndex !== null ? characterIndex + 1 : "",
+    characterId: characterIndex !== null ? `char${String(characterIndex + 1).padStart(2, "0")}` : "",
+    userAgent: navigator.userAgent,
+    pageUrl: window.location.href
+  };
+
+  fetch(LOGGING_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  }).catch(() => {
+    // 로그 실패해도 페이지 동작에는 영향 없게
+  });
 }
 
 function createCharacters() {
@@ -144,6 +179,11 @@ function createCards() {
         </div>
       </div>
     `;
+
+    const linkEl = card.querySelector(".card-link");
+    linkEl.addEventListener("click", () => {
+      logColumnClick(column, lastSelectedCharacterIndex);
+    });
 
     cardRow.appendChild(card);
     cards.push(card);
@@ -207,7 +247,7 @@ function buildLadder() {
       }
     });
 
-    // 각 줄에 최소 1개는 보장
+    // 각 줄에 최소 1개 보장
     if (!rungs.some((r) => r.y === y)) {
       const forced = Math.floor(Math.random() * (cols - 1));
       const rung = {
@@ -350,10 +390,12 @@ function resetBoard() {
   });
   runner.classList.add("hidden");
   ladderState = buildLadder();
+  lastSelectedCharacterIndex = null;
 }
 
 function startGame(charIndex) {
   isPlaying = true;
+  lastSelectedCharacterIndex = charIndex;
 
   cards.forEach((card) => card.classList.remove("flip"));
   characterEls.forEach((el, idx) => {
