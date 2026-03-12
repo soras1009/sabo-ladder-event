@@ -15,7 +15,7 @@ const columns = [
   {
     id: "col01_hot_issue",
     section: "핫이슈",
-    sub: "삼천리그룹 70년사 발",
+    sub: "삼천리그룹 70년사 발간",
     link: "http://sabo.samchully.co.kr/202603/special06.php"
   },
   {
